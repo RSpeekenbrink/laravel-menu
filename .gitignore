@@ -1,0 +1,7 @@
+vendor/
+.idea/
+report/
+.DS_Store
+composer.lock
+phpunit.xml
+\.php_cs\.cache
