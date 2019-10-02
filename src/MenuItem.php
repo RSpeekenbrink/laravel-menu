@@ -36,7 +36,7 @@ class MenuItem implements MenuItemContract, Arrayable
     }
 
     /**
-     * Set the title of the MenuItem
+     * Set the title of the MenuItem.
      *
      * @param $title
      * @return $this

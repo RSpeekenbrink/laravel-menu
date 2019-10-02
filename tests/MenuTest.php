@@ -35,7 +35,8 @@ class MenuTest extends TestCase
         $groupTitle = 'TestGroup';
         $groupNamespace = 'testgroup';
 
-        $this->menu->group($groupNamespace, $groupTitle, function () {});
+        $this->menu->group($groupNamespace, $groupTitle, function () {
+        });
 
         $this->assertMenuCount(1);
 

@@ -12,7 +12,7 @@ interface MenuItem
     public function getTitle();
 
     /**
-     * Set the title of the MenuItem
+     * Set the title of the MenuItem.
      *
      * @param $title
      * @return self

@@ -62,7 +62,7 @@ class Menu implements Arrayable
     }
 
     /**
-     * Get or create group by namespace
+     * Get or create group by namespace.
      *
      * @param string $namespace
      * @param string $title
@@ -70,8 +70,7 @@ class Menu implements Arrayable
      */
     public function getGroup($namespace, $title)
     {
-        if ($group = $this->getGroupByNamespace($this->menuItems, $namespace))
-        {
+        if ($group = $this->getGroupByNamespace($this->menuItems, $namespace)) {
             return $group;
         }
 
@@ -79,7 +78,7 @@ class Menu implements Arrayable
     }
 
     /**
-     * Get group by namespace in given MenuItemCollection
+     * Get group by namespace in given MenuItemCollection.
      *
      * @param MenuItemCollection $itemCollection
      * @param string $namespace
@@ -114,6 +113,7 @@ class Menu implements Arrayable
         }
 
         $this->menuItems->add($group);
+
         return $group;
     }
 
@@ -157,8 +157,6 @@ class Menu implements Arrayable
         if ($group = end($this->groupStack)) {
             return $group->addChild($item);
         }
-
-        return null;
     }
 
     /**
@@ -180,7 +178,7 @@ class Menu implements Arrayable
      */
     public function hasGroupStack()
     {
-        return !empty($this->groupStack);
+        return ! empty($this->groupStack);
     }
 
     /**
