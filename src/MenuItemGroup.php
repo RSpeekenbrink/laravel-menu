@@ -34,7 +34,7 @@ class MenuItemGroup extends MenuItem
     }
 
     /**
-     * Get the Children of the MenuItemGroup
+     * Get the Children of the MenuItemGroup.
      *
      * @return MenuItemCollection
      */
@@ -44,7 +44,7 @@ class MenuItemGroup extends MenuItem
     }
 
     /**
-     * Get the MenuItemGroups Namespace
+     * Get the MenuItemGroups Namespace.
      *
      * @return string
      */

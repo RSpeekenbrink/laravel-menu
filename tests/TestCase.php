@@ -2,10 +2,10 @@
 
 namespace RSpeekenbrink\LaravelInertiaMenu\Tests;
 
-use Orchestra\Testbench\TestCase as BaseTestCase;
-use RSpeekenbrink\LaravelInertiaMenu\Contracts\MenuItem;
 use RSpeekenbrink\LaravelInertiaMenu\Menu;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 use RSpeekenbrink\LaravelInertiaMenu\MenuItemGroup;
+use RSpeekenbrink\LaravelInertiaMenu\Contracts\MenuItem;
 
 class TestCase extends BaseTestCase
 {
