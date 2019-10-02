@@ -27,7 +27,7 @@ class MenuServiceProvider extends ServiceProvider
 
     protected function registerInertiaShare()
     {
-        $menu = $this->app('menu');
+        $menu = $this->app['menu'];
 
         Inertia::share([
             'menu' => function () use ($menu) {
