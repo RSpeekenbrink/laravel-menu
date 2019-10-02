@@ -2,9 +2,9 @@
 
 namespace RSpeekenbrink\LaravelInertiaMenu;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use Illuminate\Contracts\Auth\Access\Gate;
+use Illuminate\Contracts\Support\Arrayable;
 
 class Menu implements Arrayable
 {
@@ -35,7 +35,7 @@ class Menu implements Arrayable
     }
 
     /**
-     * Add a new menuItem to the menu if the condition is true
+     * Add a new menuItem to the menu if the condition is true.
      *
      * @param $title
      * @param $route
@@ -48,7 +48,7 @@ class Menu implements Arrayable
     }
 
     /**
-     * Add a new menuItem to the menu when authorized
+     * Add a new menuItem to the menu when authorized.
      *
      * @param $title
      * @param $route
@@ -233,7 +233,7 @@ class Menu implements Arrayable
     }
 
     /**
-     * Resolve the condition
+     * Resolve the condition.
      *
      * @param $condition
      * @return bool
