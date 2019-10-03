@@ -21,7 +21,7 @@ class MenuServiceProvider extends ServiceProvider
     protected function registerMenu()
     {
         $this->app->singleton('menu', function ($app) {
-            return new Menu($app);
+            return new Menu();
         });
     }
 
