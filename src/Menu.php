@@ -2,6 +2,8 @@
 
 namespace RSpeekenbrink\LaravelInertiaMenu;
 
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Support\Arrayable;
 
 class Menu implements Arrayable
@@ -30,6 +32,35 @@ class Menu implements Arrayable
     public function add($title, $route)
     {
         return $this->createItem($title, $route);
+    }
+
+    /**
+     * Add a new menuItem to the menu if the condition is true.
+     *
+     * @param $title
+     * @param $route
+     * @param $condition
+     * @return bool|Contracts\MenuItem
+     */
+    public function addIf($title, $route, $condition)
+    {
+        return $this->resolveCondition($condition) ? $this->add($title, $route) : null;
+    }
+
+    /**
+     * Add a new menuItem to the menu when authorized.
+     *
+     * @param $title
+     * @param $route
+     * @param string|array $authorization
+     * @return null|Contracts\MenuItem
+     */
+    public function addIfCan($title, $route, $authorization)
+    {
+        $arguments = is_array($authorization) ? $authorization : [$authorization];
+        $ability = array_shift($arguments);
+
+        return $this->addIf(Container::getInstance()->make(Gate::class)->allows($ability, $arguments), $title, $route);
     }
 
     /**
@@ -199,5 +230,16 @@ class Menu implements Arrayable
     public function toArray()
     {
         return $this->getMenuItems()->toArray();
+    }
+
+    /**
+     * Resolve the condition.
+     *
+     * @param $condition
+     * @return bool
+     */
+    protected function resolveCondition($condition)
+    {
+        return is_callable($condition) ? $condition() : $condition;
     }
 }

@@ -30,6 +30,31 @@ class MenuTest extends TestCase
     }
 
     /** @test */
+    public function it_can_add_menu_items_on_true_condition()
+    {
+        $title = 'TestItem';
+        $route = 'test.route';
+        $this->menu->addIf($title, $route, true);
+
+        $this->assertMenuCount(1);
+
+        $item = $this->menu->getMenuItems()->get(0);
+
+        $this->assertInstanceOf(MenuItem::class, $item);
+        $this->assertMenuItemEquals($item, $title, $route);
+    }
+
+    /** @test */
+    public function it_does_not_add_menu_items_on_false_condition()
+    {
+        $title = 'TestItem';
+        $route = 'test.route';
+        $this->menu->addIf($title, $route, false);
+
+        $this->assertMenuCount(0);
+    }
+
+    /** @test */
     public function it_can_add_menu_item_groups()
     {
         $groupTitle = 'TestGroup';
