@@ -2,7 +2,7 @@
 
 namespace RSpeekenbrink\LaravelInertiaMenu;
 
-use Auth;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -60,7 +60,7 @@ class Menu implements Arrayable
         $arguments = is_array($authorization) ? $authorization : [$authorization];
         $ability = array_shift($arguments);
 
-        return $this->addIf(app(Gate::class)->allows($ability, $arguments), $title, $route);
+        return $this->addIf(Container::getInstance()->make(Gate::class)->allows($ability, $arguments), $title, $route);
     }
 
     /**
