@@ -1,6 +1,6 @@
 {
-    "name": "rspeekenbrink/laravel-inertia-menu",
-    "description": "Simple menu generation for Inertia using Laravel routes and auth",
+    "name": "rspeekenbrink/laravel-menu",
+    "description": "Simple menu generation in Laravel",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -13,8 +13,7 @@
         "php": "^7.2",
         "illuminate/contracts": "~5.8.0|^6.0",
         "illuminate/support": "~5.8.0|^6.0",
-        "inertiajs/inertia-laravel": "^0.1.3",
-        "illuminate/container": "^6.1"
+        "ext-json": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.6",
@@ -23,12 +22,12 @@
     },
     "autoload": {
         "psr-4": {
-            "RSpeekenbrink\\LaravelInertiaMenu\\": "src"
+            "RSpeekenbrink\\LaravelMenu\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "RSpeekenbrink\\LaravelInertiaMenu\\Tests\\": "tests"
+            "RSpeekenbrink\\LaravelMenu\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -37,10 +36,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RSpeekenbrink\\LaravelInertiaMenu\\MenuServiceProvider"
+                "RSpeekenbrink\\LaravelMenu\\MenuServiceProvider"
             ],
             "aliases": {
-                "Menu": "RSpeekenbrink\\LaravelInertiaMenu\\Facades\\Menu"
+                "Menu": "RSpeekenbrink\\LaravelMenu\\Facades\\Menu"
             }
         }
     }

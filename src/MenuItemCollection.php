@@ -1,21 +1,46 @@
 <?php
 
-namespace RSpeekenbrink\LaravelInertiaMenu;
+namespace RSpeekenbrink\LaravelMenu;
 
 use Illuminate\Support\Collection;
+use RSpeekenbrink\LaravelMenu\Contracts\MenuItem;
 
 class MenuItemCollection extends Collection
 {
     /**
-     * Get MenuItemGroup by namespace.
+     * Returns if the collection has a MenuItem with the given name.
      *
-     * @param string $namespace
-     * @return MenuItemGroup
+     * @param string $name
+     * @return bool
      */
-    public function getGroupByNamespace($namespace)
+    public function hasName(string $name)
     {
-        return $this->whereInstanceOf(MenuItemGroup::class)->filter(function ($item) use ($namespace) {
-            return $item->getNamespace() == $namespace;
-        })->first();
+        return $this->filter(function (MenuItem $item) use ($name) {
+            return $item->getName() == $name ?: $item->getChildren()->hasName($name);
+        })->count() > 0;
+    }
+
+    /**
+     * Get a MenuItem from the collection by name.
+     *
+     * @param string $name
+     * @return MenuItem
+     */
+    public function getItemByName(string $name)
+    {
+        if ($item = $this->filter(function (MenuItem $item) use ($name) {
+            return $item->getName() == $name;
+        })->first()) {
+            return $item;
+        }
+
+        // Nested Search
+        foreach ($this as $item) {
+            if ($item instanceof MenuItem) {
+                if ($foundItem = $item->getChildren()->getItemByName($name)) {
+                    return $foundItem;
+                }
+            }
+        }
     }
 }

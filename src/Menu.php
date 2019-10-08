@@ -1,18 +1,17 @@
 <?php
 
-namespace RSpeekenbrink\LaravelInertiaMenu;
+namespace RSpeekenbrink\LaravelMenu;
 
-use Illuminate\Container\Container;
+use JsonSerializable;
 use Illuminate\Contracts\Auth\Access\Gate;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
+use RSpeekenbrink\LaravelMenu\Exceptions\NameExistsException;
 
-class Menu implements Arrayable
+class Menu implements Arrayable, Jsonable, JsonSerializable
 {
     /** @var MenuItemCollection */
     protected $menuItems;
-
-    /** @var array */
-    protected $groupStack = [];
 
     /**
      * Menu constructor.
@@ -23,193 +22,95 @@ class Menu implements Arrayable
     }
 
     /**
-     * Add a new menuItem to the menu.
+     * Add a new MenuItem to the menu.
      *
-     * @param $title
-     * @param $route
+     * @param string $name
+     * @param array $attributes
      * @return Contracts\MenuItem
+     *
+     * @throws NameExistsException
      */
-    public function add($title, $route)
+    public function add(string $name, array $attributes = [])
     {
-        return $this->createItem($title, $route);
+        if ($this->menuItems->hasName($name)) {
+            throw new NameExistsException($name);
+        }
+
+        $item = $this->createItem($name, $attributes);
+
+        $this->menuItems->add($item);
+
+        return $item;
     }
 
     /**
      * Add a new menuItem to the menu if the condition is true.
      *
-     * @param $title
-     * @param $route
-     * @param $condition
+     * @param mixed $condition
+     * @param string $name
+     * @param array $attributes
      * @return bool|Contracts\MenuItem
+     *
+     * @throws NameExistsException
      */
-    public function addIf($title, $route, $condition)
+    public function addIf($condition, string $name, array $attributes = [])
     {
-        return $this->resolveCondition($condition) ? $this->add($title, $route) : null;
+        return $this->resolveCondition($condition) ? $this->add($name, $attributes) : null;
     }
 
     /**
      * Add a new menuItem to the menu when authorized.
      *
-     * @param $title
-     * @param $route
      * @param string|array $authorization
+     * @param string $name
+     * @param array $attributes
      * @return null|Contracts\MenuItem
+     *
+     * @throws NameExistsException
      */
-    public function addIfCan($title, $route, $authorization)
+    public function addIfCan($authorization, string $name, array $attributes = [])
     {
         $arguments = is_array($authorization) ? $authorization : [$authorization];
         $ability = array_shift($arguments);
 
-        return $this->addIf(Container::getInstance()->make(Gate::class)->allows($ability, $arguments), $title, $route);
+        return $this->addIf(app(Gate::class)->allows($ability, $arguments), $name, $attributes);
     }
 
     /**
-     * Add a new menuItemGroup to the menu.
+     * Resolve the condition.
      *
-     * @param string $namespace
-     * @param string $title
-     * @param \Closure $items
+     * @param $condition
+     * @return bool
      */
-    public function group($namespace, $title, \Closure $items)
+    protected function resolveCondition($condition)
     {
-        $this->updateGroupStack($namespace, $title);
-
-        $this->loadItems($items);
-
-        array_pop($this->groupStack);
-    }
-
-    /**
-     * Update the groupStack with a new/existing group.
-     *
-     * @param string $namespace
-     * @param string $title
-     */
-    protected function updateGroupStack($namespace, $title)
-    {
-        $group = $this->getGroup($namespace, $title);
-
-        $this->groupStack[] = $group;
-    }
-
-    /**
-     * Get or create group by namespace.
-     *
-     * @param string $namespace
-     * @param string $title
-     * @return MenuItemGroup
-     */
-    public function getGroup($namespace, $title)
-    {
-        if ($group = $this->getGroupByNamespace($this->menuItems, $namespace)) {
-            return $group;
-        }
-
-        return $this->createGroup($namespace, $title);
-    }
-
-    /**
-     * Get group by namespace in given MenuItemCollection.
-     *
-     * @param MenuItemCollection $itemCollection
-     * @param string $namespace
-     * @return MenuItemGroup
-     */
-    protected function getGroupByNamespace($itemCollection, $namespace)
-    {
-        return $itemCollection->getGroupByNamespace($namespace);
-    }
-
-    /**
-     * @param \Closure $items
-     */
-    protected function loadItems(\Closure $items)
-    {
-        $items($this);
-    }
-
-    /**
-     * Create new group instance.
-     *
-     * @param string $namespace
-     * @param string $title
-     * @return MenuItemGroup
-     */
-    protected function createGroup($namespace, $title)
-    {
-        $group = $this->newGroup($namespace)->setTitle($title);
-
-        if ($this->hasGroupStack()) {
-            return $this->addItemToLastGroup($group);
-        }
-
-        $this->menuItems->add($group);
-
-        return $group;
-    }
-
-    /**
-     * Create new group object.
-     *
-     * @param $namespace
-     * @return MenuItemGroup
-     */
-    protected function newGroup($namespace)
-    {
-        return new MenuItemGroup($namespace);
+        return is_callable($condition) ? $condition() : $condition;
     }
 
     /**
      * Create new MenuItem instance.
      *
-     * @param string $title
-     * @param string $route
+     * @param string $name
+     * @param array $attributes
      * @return Contracts\MenuItem
      */
-    protected function createItem($title, $route)
+    protected function createItem(string $name, array $attributes = [])
     {
-        $item = $this->newItem($title, $route);
+        $item = $this->newItem($name, $attributes);
 
-        if ($this->hasGroupStack()) {
-            return $this->addItemToLastGroup($item);
-        }
-
-        return $this->menuItems->add($item);
-    }
-
-    /**
-     * Add item to last group in the groupStack.
-     *
-     * @param MenuItem $item
-     * @return Contracts\MenuItem
-     */
-    protected function addItemToLastGroup(MenuItem $item)
-    {
-        if ($group = end($this->groupStack)) {
-            return $group->addChild($item);
-        }
+        return $item;
     }
 
     /**
      * Create new MenuItem object.
      *
-     * @param $title
-     * @param $route
+     * @param string $name
+     * @param array $attributes
      * @return MenuItem
      */
-    protected function newItem($title, $route)
+    protected function newItem(string $name, array $attributes = [])
     {
-        return new MenuItem($title, $route);
-    }
-
-    /**
-     * Returns if Menu has GroupStack.
-     *
-     * @return bool
-     */
-    public function hasGroupStack()
-    {
-        return ! empty($this->groupStack);
+        return new MenuItem($name, $attributes);
     }
 
     /**
@@ -233,13 +134,23 @@ class Menu implements Arrayable
     }
 
     /**
-     * Resolve the condition.
+     * Convert the object to its JSON representation.
      *
-     * @param $condition
-     * @return bool
+     * @param int $options
+     * @return string
      */
-    protected function resolveCondition($condition)
+    public function toJson($options = 0)
     {
-        return is_callable($condition) ? $condition() : $condition;
+        return json_encode($this->toArray(), $options);
+    }
+
+    /**
+     * Convert the object into something JSON serializable.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }

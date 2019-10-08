@@ -1,11 +1,11 @@
 <?php
 
-namespace RSpeekenbrink\LaravelInertiaMenu\Facades;
+namespace RSpeekenbrink\LaravelMenu\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \RSpeekenbrink\LaravelInertiaMenu\Menu
+ * @see \RSpeekenbrink\LaravelMenu\Menu
  */
 class Menu extends Facade
 {

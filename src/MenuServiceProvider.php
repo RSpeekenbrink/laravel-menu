@@ -1,8 +1,7 @@
 <?php
 
-namespace RSpeekenbrink\LaravelInertiaMenu;
+namespace RSpeekenbrink\LaravelMenu;
 
-use Inertia\Inertia;
 use Illuminate\Support\ServiceProvider;
 
 class MenuServiceProvider extends ServiceProvider
@@ -15,7 +14,6 @@ class MenuServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerMenu();
-        $this->registerInertiaShare();
     }
 
     protected function registerMenu()
@@ -23,16 +21,5 @@ class MenuServiceProvider extends ServiceProvider
         $this->app->singleton('menu', function ($app) {
             return new Menu();
         });
-    }
-
-    protected function registerInertiaShare()
-    {
-        $menu = $this->app['menu'];
-
-        Inertia::share([
-            'menu' => function () use ($menu) {
-                return $menu->toArray();
-            },
-        ]);
     }
 }
