@@ -41,6 +41,10 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
             throw new NameExistsException($name);
         }
 
+        if ($this->hasParent()) {
+            $name = end($this->parentStack)->getName() '.' $name;
+        }
+
         $item = $this->createItem($name, $attributes);
 
         $this->pushItem($item);
