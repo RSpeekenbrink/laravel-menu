@@ -222,8 +222,7 @@ class MenuItem implements MenuItemContract, Arrayable
      */
     public function addChildren(Closure $items)
     {
-        if (!$this->menu)
-        {
+        if (! $this->menu) {
             throw new Exception('No menu instance');
         }
 

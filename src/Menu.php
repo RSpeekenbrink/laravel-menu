@@ -42,7 +42,7 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
         }
 
         if ($this->hasParent()) {
-            $name = end($this->parentStack)->getName() '.' $name;
+            $name = end($this->parentStack)->getName().'.'.$name;
         }
 
         $item = $this->createItem($name, $attributes);
@@ -61,7 +61,7 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     protected function pushItem(MenuItemContract $item)
     {
         if ($this->hasParent()) {
-           return end($this->parentStack)->addChild($item);
+            return end($this->parentStack)->addChild($item);
         }
 
         return $this->menuItems->add($item);
@@ -74,7 +74,7 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
      */
     protected function hasParent()
     {
-        return !empty($this->parentStack);
+        return ! empty($this->parentStack);
     }
 
     /**
