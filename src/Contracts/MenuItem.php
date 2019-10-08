@@ -2,6 +2,7 @@
 
 namespace RSpeekenbrink\LaravelMenu\Contracts;
 
+use RSpeekenbrink\LaravelMenu\Menu;
 use RSpeekenbrink\LaravelMenu\MenuItemCollection;
 
 interface MenuItem
@@ -81,6 +82,14 @@ interface MenuItem
     public function setActive(bool $state);
 
     /**
+     * Set the menu instance for the MenuItem.
+     *
+     * @param Menu $menu
+     * @return $this
+     */
+    public function setMenu(Menu $menu);
+
+    /**
      * Get the children of the MenuItem.
      *
      * @return MenuItemCollection
@@ -94,6 +103,14 @@ interface MenuItem
      * @return $this
      */
     public function addChild(self $item);
+
+    /**
+     * Add multiple children to the MenuItem.
+     *
+     * @param \Closure $items
+     * @return mixed
+     */
+    public function addChildren(\Closure $items);
 
     /**
      * Return the attributes of the MenuItem as array.

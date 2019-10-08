@@ -2,16 +2,21 @@
 
 namespace RSpeekenbrink\LaravelMenu;
 
+use Closure;
 use JsonSerializable;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use RSpeekenbrink\LaravelMenu\Exceptions\NameExistsException;
+use RSpeekenbrink\LaravelMenu\Contracts\MenuItem as MenuItemContract;
 
 class Menu implements Arrayable, Jsonable, JsonSerializable
 {
     /** @var MenuItemCollection */
     protected $menuItems;
+
+    /** @var array */
+    protected $parentStack;
 
     /**
      * Menu constructor.
@@ -38,9 +43,34 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
 
         $item = $this->createItem($name, $attributes);
 
-        $this->menuItems->add($item);
+        $this->pushItem($item);
 
         return $item;
+    }
+
+    /**
+     * Push the given item to the correct stacks.
+     *
+     * @param MenuItemContract $item
+     * @return MenuItemCollection
+     */
+    protected function pushItem(MenuItemContract $item)
+    {
+        if ($this->hasParent()) {
+           return end($this->parentStack)->addChild($item);
+        }
+
+        return $this->menuItems->add($item);
+    }
+
+    /**
+     * Check if there is a parent in the parentstack.
+     *
+     * @return bool
+     */
+    protected function hasParent()
+    {
+        return !empty($this->parentStack);
     }
 
     /**
@@ -77,6 +107,17 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
+     * Find and return a MenuItem by name.
+     *
+     * @param $name
+     * @return null|Contracts\MenuItem
+     */
+    public function getItemByName($name)
+    {
+        return $this->menuItems->getItemByName($name);
+    }
+
+    /**
      * Resolve the condition.
      *
      * @param $condition
@@ -96,7 +137,7 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
      */
     protected function createItem(string $name, array $attributes = [])
     {
-        $item = $this->newItem($name, $attributes);
+        $item = $this->newItem($name, $attributes)->setMenu($this);
 
         return $item;
     }
@@ -131,6 +172,19 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     public function toArray()
     {
         return $this->getMenuItems()->toArray();
+    }
+
+    /**
+     * @param MenuItemContract $parent
+     * @param Closure $items
+     */
+    public function loadChildren(MenuItemContract $parent, Closure $items)
+    {
+        $this->parentStack[] = $parent;
+
+        $items();
+
+        array_pop($this->parentStack);
     }
 
     /**

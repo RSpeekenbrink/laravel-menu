@@ -2,6 +2,8 @@
 
 namespace RSpeekenbrink\LaravelMenu;
 
+use Closure;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Contracts\Support\Arrayable;
 use RSpeekenbrink\LaravelMenu\Contracts\MenuItem as MenuItemContract;
@@ -22,6 +24,9 @@ class MenuItem implements MenuItemContract, Arrayable
 
     /** @var MenuItemCollection */
     protected $children;
+
+    /** @var Menu */
+    protected $menu;
 
     /** @var array */
     protected $allowedAttributes = [
@@ -152,6 +157,19 @@ class MenuItem implements MenuItemContract, Arrayable
     }
 
     /**
+     * Set the menu instance for the MenuItem.
+     *
+     * @param Menu $menu
+     * @return $this
+     */
+    public function setMenu(Menu $menu)
+    {
+        $this->menu = $menu;
+
+        return $this;
+    }
+
+    /**
      * Get the children of the MenuItem.
      *
      * @return MenuItemCollection
@@ -193,5 +211,24 @@ class MenuItem implements MenuItemContract, Arrayable
         }
 
         return $item;
+    }
+
+    /**
+     * Add multiple children to the MenuItem.
+     *
+     * @param Closure $items
+     * @return $this
+     * @throws Exception
+     */
+    public function addChildren(Closure $items)
+    {
+        if (!$this->menu)
+        {
+            throw new Exception('No menu instance');
+        }
+
+        $this->menu->loadChildren($this, $items);
+
+        return $this;
     }
 }
