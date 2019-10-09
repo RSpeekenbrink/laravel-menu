@@ -31,6 +31,11 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
         'name',
     ];
 
+    /** @var array */
+    protected $visibleDefaultAttributes = [
+        'name'
+    ];
+
     /**
      * MenuItem constructor.
      *
@@ -83,7 +88,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     protected function getArrayableAttributes()
     {
-        return $this->attributes;
+        return array_unique(array_merge($this->attributes, $this->getDefaultAttributes()));
     }
 
     /**
@@ -146,6 +151,24 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     public function getDates()
     {
         return $this->dates;
+    }
+
+    /**
+     * Get an attribute array of the specified default attributes.
+     *
+     * @return array
+     */
+    protected function getDefaultAttributes()
+    {
+        $attributes = [];
+
+        foreach ($this->visibleDefaultAttributes as $key) {
+            if (isset($this->{$key})) {
+                $attributes[$key] = $this->{$key};
+            }
+        }
+
+        return $attributes;
     }
 
     /**

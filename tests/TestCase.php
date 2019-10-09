@@ -25,7 +25,9 @@ class TestCase extends BaseTestCase
 
     protected function assertMenuItemEquals(MenuItem $menuItem, string $name, array $attributes)
     {
+        $attributes['name'] = $name;
+
         $this->assertEquals($name, $menuItem->getName());
-        $this->assertEquals($attributes, $menuItem->getAttributes());
+        $this->assertEquals($attributes, $menuItem->toArray());
     }
 }
