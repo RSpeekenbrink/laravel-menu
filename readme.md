@@ -66,6 +66,20 @@ Menu::add('dashboard', ['title' => 'Dashboard'])->addChildren(function () {
 
 You can pass any attributes to the MenuItem.
 
+### Adding items condition wise
+
+If you would like to add menu items conditionwise, for example only add a menu item if a user is logged in, you can do it like this:
+
+```php
+Menu::addIf($conditionOrClosure, 'itemName', $attributes);
+```
+
+Or pass a Auth Guard:
+
+```php
+Menu::addIfCan('MyAuthGuard', 'itemName', $attributes);
+```
+
 ### Usage with InertiaJS
 
 The main purpose of this package is to create Menu objects that can be adopted easily by the Front-End.
