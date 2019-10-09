@@ -5,6 +5,7 @@ namespace RSpeekenbrink\LaravelMenu\Tests;
 use Illuminate\Auth\GenericUser;
 use RSpeekenbrink\LaravelMenu\Menu;
 use RSpeekenbrink\LaravelMenu\MenuItem;
+use RSpeekenbrink\LaravelMenu\Exceptions\NameExistsException;
 
 class MenuTest extends TestCase
 {
@@ -32,6 +33,17 @@ class MenuTest extends TestCase
         $this->menu->add('test', []);
 
         $this->assertInstanceOf(MenuItem::class, $this->menu->getMenuItems()->get(0));
+    }
+
+    public function testItemsWithTheSameNameResultIntoAnException()
+    {
+        $name = 'test';
+
+        $this->menu->add($name, []);
+
+        $this->expectException(NameExistsException::class);
+
+        $this->menu->add($name, []);
     }
 
     public function testChildrenCanBeAddedWithClosure()
