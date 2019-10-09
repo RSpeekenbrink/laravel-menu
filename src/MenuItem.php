@@ -7,7 +7,6 @@ use JsonSerializable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
-use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Database\Eloquent\Concerns\GuardsAttributes;
 use RSpeekenbrink\LaravelMenu\Exceptions\MissingAssociatedMenuException;
 
@@ -33,7 +32,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
 
     /** @var array */
     protected $visibleDefaultAttributes = [
-        'name'
+        'name',
     ];
 
     /**
@@ -67,8 +66,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      *
      * @param array $attributes
      * @return $this
-     *
-     * @throws MassAssignmentException
      */
     public function fill(array $attributes)
     {
@@ -119,7 +116,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     public function addChild(self $item)
     {
-        $this->getChildren()->add($item);
+        $this->children->add($item);
 
         return $this;
     }
