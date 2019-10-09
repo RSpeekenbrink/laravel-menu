@@ -24,11 +24,11 @@ Menu::add('itemName', ['link' => '/', 'title' => 'Home']);
 
 // Menu::toArray() Output:
 [
-    {
+    [
         'name' => 'itemName',
         'title' => 'Home,
         'link' => '/,
-    }
+    ]
 ]
 ```
 
@@ -45,26 +45,39 @@ Menu::add('dashboard', ['title' => 'Dashboard'])->addChildren(function () {
 
 // Menu::toArray() Output:
 [
-    {
+    [
         'name' => 'dashboard',
         'title' => 'Dashboard',
         'children' => [
-            {
+            [
                 'name' => 'dashboard.index',
                 'title' => 'Home,
                 'link' => '/',
-            },
-            {
+            ],
+            [
                 'name' => 'dashboard.profile',
                 'title' => 'Profile,
                 'link' => '/profile',
-            }
+            ]
         ]
-    }
+    ]
 ]
 ```
 
 You can pass any attributes to the MenuItem.
+
+```php
+Menu::add('itemName', ['someAttribute' => 231, 'another' => 'value2']);
+
+
+// Menu::toArray() Output:
+[
+    [
+        'someAttribute' => 231,
+        'another' => 'value2,
+    ]
+]
+```
 
 ### Adding items condition wise
 
