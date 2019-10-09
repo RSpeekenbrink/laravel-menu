@@ -19,12 +19,10 @@ class MenuTest extends TestCase
         $name = 'testItem';
         $title = 'testTitle';
         $link = 'testLink';
-        $active = true;
 
         $attributes = [
             'title' => $title,
             'link' => $link,
-            'active' => $active,
         ];
 
         $this->menu->add($name, $attributes);
