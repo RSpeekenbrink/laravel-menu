@@ -3,11 +3,11 @@
 namespace RSpeekenbrink\LaravelMenu;
 
 use Closure;
-use Illuminate\Database\Eloquent\MassAssignmentException;
 use JsonSerializable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Database\Eloquent\Concerns\GuardsAttributes;
 use RSpeekenbrink\LaravelMenu\Exceptions\MissingAssociatedMenuException;
 
@@ -72,17 +72,18 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
                 $this->setAttribute($key, $value);
             }
         }
+
         return $this;
     }
 
     /**
-     * Get the attributes that should be converted to dates.
+     * Get an attribute array of all arrayable attributes.
      *
      * @return array
      */
-    public function getDates()
+    protected function getArrayableAttributes()
     {
-        return $this->dates;
+        return $this->attributes;
     }
 
     /**
@@ -93,29 +94,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     public function getCasts()
     {
         return $this->casts;
-    }
-
-    /**
-     * Get the name of the menuItem.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set the name of the menuItem.
-     *
-     * @param $name
-     * @return $this
-     */
-    protected function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -152,10 +130,43 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     public function addChildren(Closure $items)
     {
         if (! $this->getMenu()) {
-            throw new MissingAssociatedMenuException("For MenuItem: ".$this->getName());
+            throw new MissingAssociatedMenuException('For MenuItem: '.$this->getName());
         }
 
         $this->menu->loadChildren($this, $items);
+
+        return $this;
+    }
+
+    /**
+     * Get the attributes that should be converted to dates.
+     *
+     * @return array
+     */
+    public function getDates()
+    {
+        return $this->dates;
+    }
+
+    /**
+     * Get the name of the menuItem.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the name of the menuItem.
+     *
+     * @param $name
+     * @return $this
+     */
+    protected function setName($name)
+    {
+        $this->name = $name;
 
         return $this;
     }
