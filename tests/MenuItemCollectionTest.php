@@ -18,46 +18,33 @@ class MenuItemCollectionTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
-    public function it_can_be_constructed()
+    public function testCollectionCanBeInstantiated()
     {
         $this->assertInstanceOf(MenuItemCollection::class, $this->collection);
     }
 
-    /** @test */
-    public function it_can_add_menu_items()
+    public function testMenuItemsCanBeAddedToTheCollection()
     {
         $this->collection->add(m::mock(MenuItem::class));
 
         $this->assertCount(1, $this->collection);
     }
 
-    /** @test */
-    public function it_can_tell_if_it_has_item_with_name()
+    public function testCollectionCanTellIfItHasItemWithName()
     {
-        $childItemName = 'childname';
-        $child = m::mock(MenuItem::class)->shouldReceive([
-            'getName' => $childItemName,
-            'getChildren' => new MenuItemCollection(),
-        ])->getMock();
-
-        $childCollection = new MenuItemCollection([$child]);
-
         $itemName = 'itemname';
         $item = m::mock(MenuItem::class)->shouldReceive([
             'getName' => $itemName,
-            'getChildren' => $childCollection,
+            'getChildren' => new MenuItemCollection(),
         ])->getMock();
 
         $this->collection->add($item);
 
         $this->assertTrue($this->collection->hasName($itemName));
-        $this->assertTrue($this->collection->hasName($childItemName));
         $this->assertFalse($this->collection->hasName('NotExisting'));
     }
 
-    /** @test */
-    public function it_can_get_nested_item_by_name()
+    public function testCollectionCanTellIfItHasNestedItemWithName()
     {
         $childItemName = 'childname';
         $child = m::mock(MenuItem::class)->shouldReceive([
@@ -75,7 +62,40 @@ class MenuItemCollectionTest extends TestCase
 
         $this->collection->add($item);
 
+        $this->assertTrue($this->collection->hasName($childItemName));
+    }
+
+    public function testCollectionCanFindItemByName()
+    {
+        $itemName = 'itemname';
+        $item = m::mock(MenuItem::class)->shouldReceive([
+            'getName' => $itemName,
+            'getChildren' => new MenuItemCollection(),
+        ])->getMock();
+
+        $this->collection->add($item);
+
         $this->assertEquals($item, $this->collection->getItemByName($itemName));
+    }
+
+    public function testCollectionCanFindNestedItemByName()
+    {
+        $childItemName = 'childname';
+        $child = m::mock(MenuItem::class)->shouldReceive([
+            'getName' => $childItemName,
+            'getChildren' => new MenuItemCollection(),
+        ])->getMock();
+
+        $childCollection = new MenuItemCollection([$child]);
+
+        $itemName = 'itemname';
+        $item = m::mock(MenuItem::class)->shouldReceive([
+            'getName' => $itemName,
+            'getChildren' => $childCollection,
+        ])->getMock();
+
+        $this->collection->add($item);
+
         $this->assertEquals($child, $this->collection->getItemByName($childItemName));
     }
 }

@@ -30,11 +30,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
         'name',
     ];
 
-    /** @var array */
-    protected $visibleDefaultAttributes = [
-        'name',
-    ];
-
     /**
      * MenuItem constructor.
      *
@@ -79,13 +74,31 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
+     * Convert some of the variables of the MenuItem to array.
+     *
+     * @return array
+     */
+    protected function variablesToArray()
+    {
+        $array = [
+            'name' => $this->getName(),
+        ];
+
+        if (count($this->getChildren()) > 0) {
+            $array['children'] = $this->getChildren()->toArray();
+        }
+
+        return $array;
+    }
+
+    /**
      * Get an attribute array of all arrayable attributes.
      *
      * @return array
      */
     protected function getArrayableAttributes()
     {
-        return array_unique(array_merge($this->attributes, $this->getDefaultAttributes()));
+        return $this->attributes;
     }
 
     /**
@@ -151,24 +164,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
-     * Get an attribute array of the specified default attributes.
-     *
-     * @return array
-     */
-    protected function getDefaultAttributes()
-    {
-        $attributes = [];
-
-        foreach ($this->visibleDefaultAttributes as $key) {
-            if (isset($this->{$key})) {
-                $attributes[$key] = $this->{$key};
-            }
-        }
-
-        return $attributes;
-    }
-
-    /**
      * Get the name of the menuItem.
      *
      * @return string
@@ -221,7 +216,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     public function toArray()
     {
-        return $this->attributesToArray();
+        return array_merge($this->attributesToArray(), $this->variablesToArray());
     }
 
     /**

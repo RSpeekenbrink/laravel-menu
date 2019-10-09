@@ -23,11 +23,10 @@ class TestCase extends BaseTestCase
         $this->assertCount($expectedCount, $this->menu->getMenuItems());
     }
 
-    protected function assertMenuItemEquals(MenuItem $menuItem, string $name, array $attributes)
+    protected function assertMenuItemEquals($menuItem, string $name, array $attributes)
     {
-        $attributes['name'] = $name;
-
+        $this->assertInstanceOf(MenuItem::class, $menuItem);
         $this->assertEquals($name, $menuItem->getName());
-        $this->assertEquals($attributes, $menuItem->toArray());
+        $this->assertEquals($attributes, $menuItem->getAttributes());
     }
 }
