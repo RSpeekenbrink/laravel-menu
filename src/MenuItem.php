@@ -4,11 +4,12 @@ namespace RSpeekenbrink\LaravelMenu;
 
 use Closure;
 use Exception;
+use JsonSerializable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 use Illuminate\Contracts\Support\Arrayable;
-use RSpeekenbrink\LaravelMenu\Contracts\MenuItem as MenuItemContract;
 
-class MenuItem implements MenuItemContract, Arrayable
+class MenuItem implements Arrayable, Jsonable, JsonSerializable
 {
     /** @var string */
     protected $name;
@@ -182,10 +183,10 @@ class MenuItem implements MenuItemContract, Arrayable
     /**
      * Add children to the MenuItem.
      *
-     * @param MenuItemContract $item
+     * @param self $item
      * @return $this
      */
-    public function addChild(MenuItemContract $item)
+    public function addChild(self $item)
     {
         $this->getChildren()->add($item);
 
@@ -229,5 +230,28 @@ class MenuItem implements MenuItemContract, Arrayable
         $this->menu->loadChildren($this, $items);
 
         return $this;
+    }
+
+    /**
+     * Convert the object to its JSON representation.
+     *
+     * @param int $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        // TODO: Implement toJson() method.
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        // TODO: Implement jsonSerialize() method.
     }
 }

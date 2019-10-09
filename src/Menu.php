@@ -8,7 +8,6 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use RSpeekenbrink\LaravelMenu\Exceptions\NameExistsException;
-use RSpeekenbrink\LaravelMenu\Contracts\MenuItem as MenuItemContract;
 
 class Menu implements Arrayable, Jsonable, JsonSerializable
 {
@@ -55,10 +54,10 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Push the given item to the correct stacks.
      *
-     * @param MenuItemContract $item
+     * @param MenuItem $item
      * @return MenuItemCollection
      */
-    protected function pushItem(MenuItemContract $item)
+    protected function pushItem(MenuItem $item)
     {
         if ($this->hasParent()) {
             return end($this->parentStack)->addChild($item);
@@ -179,10 +178,10 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
-     * @param MenuItemContract $parent
+     * @param MenuItem $parent
      * @param Closure $items
      */
-    public function loadChildren(MenuItemContract $parent, Closure $items)
+    public function loadChildren(MenuItem $parent, Closure $items)
     {
         $this->parentStack[] = $parent;
 

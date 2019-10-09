@@ -3,7 +3,7 @@
 namespace RSpeekenbrink\LaravelMenu\Tests;
 
 use Mockery as m;
-use RSpeekenbrink\LaravelMenu\Contracts\MenuItem;
+use RSpeekenbrink\LaravelMenu\MenuItem;
 use RSpeekenbrink\LaravelMenu\MenuItemCollection;
 
 class MenuItemCollectionTest extends TestCase

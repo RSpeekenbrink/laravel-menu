@@ -4,7 +4,7 @@ namespace RSpeekenbrink\LaravelMenu\Tests;
 
 use RSpeekenbrink\LaravelMenu\Menu;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use RSpeekenbrink\LaravelMenu\Contracts\MenuItem;
+use RSpeekenbrink\LaravelMenu\MenuItem;
 
 class TestCase extends BaseTestCase
 {

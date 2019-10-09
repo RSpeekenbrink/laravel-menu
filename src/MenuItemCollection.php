@@ -3,7 +3,6 @@
 namespace RSpeekenbrink\LaravelMenu;
 
 use Illuminate\Support\Collection;
-use RSpeekenbrink\LaravelMenu\Contracts\MenuItem;
 
 class MenuItemCollection extends Collection
 {
