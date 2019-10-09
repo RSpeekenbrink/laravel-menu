@@ -28,7 +28,6 @@ Menu::add('itemName', ['link' => '/', 'title' => 'Home']);
         'name' => 'itemName',
         'title' => 'Home,
         'link' => '/,
-        'active' => false,
     }
 ]
 ```
@@ -49,25 +48,23 @@ Menu::add('dashboard', ['title' => 'Dashboard'])->addChildren(function () {
     {
         'name' => 'dashboard',
         'title' => 'Dashboard',
-        'link' => null,
-        'active' => false,
         'children' => [
             {
                 'name' => 'dashboard.index',
                 'title' => 'Home,
                 'link' => '/',
-                'active' => false,
             },
             {
                 'name' => 'dashboard.profile',
                 'title' => 'Profile,
                 'link' => '/profile',
-                'active' => false,
             }
         ]
     }
 ]
 ```
+
+You can pass any attributes to the MenuItem.
 
 ### Usage with InertiaJS
 
