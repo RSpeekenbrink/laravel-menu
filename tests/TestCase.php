@@ -3,8 +3,8 @@
 namespace RSpeekenbrink\LaravelMenu\Tests;
 
 use RSpeekenbrink\LaravelMenu\Menu;
-use Orchestra\Testbench\TestCase as BaseTestCase;
 use RSpeekenbrink\LaravelMenu\MenuItem;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {

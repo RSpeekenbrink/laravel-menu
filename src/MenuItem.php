@@ -5,12 +5,16 @@ namespace RSpeekenbrink\LaravelMenu;
 use Closure;
 use Exception;
 use JsonSerializable;
-use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Database\Eloquent\Concerns\GuardsAttributes;
 
 class MenuItem implements Arrayable, Jsonable, JsonSerializable
 {
+    use HasAttributes, GuardsAttributes;
+
     /** @var string */
     protected $name;
 
@@ -244,7 +248,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
      * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
