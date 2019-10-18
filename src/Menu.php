@@ -191,6 +191,19 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
+     * Get an index of an item by name.
+     *
+     * @param string $name
+     * @return int
+     */
+    public function getIndexByName($name)
+    {
+        return $this->menuItems->search(function (MenuItem $item) use ($name) {
+            return $item->getName() == $name;
+        });
+    }
+
+    /**
      * Convert the object to its JSON representation.
      *
      * @param int $options
