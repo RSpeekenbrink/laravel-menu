@@ -95,6 +95,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
         $array = [
             'name' => $this->getName(),
             'route' => $this->getRoute(),
+            'active' => $this->isActive(),
         ];
 
         if (count($this->getChildren()) > 0) {
@@ -255,5 +256,15 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     public function jsonSerialize()
     {
         return $this->toArray();
+    }
+
+    /**
+     * Returns if menuItem is active.
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
     }
 }

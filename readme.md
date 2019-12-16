@@ -19,7 +19,7 @@ composer require rspeekenbrink/laravel-menu
 A default menu will already be registered and bound to the `Menu` facade. You can add items to the menu like this:
 
 ```php
-Menu::add('itemName', ['link' => '/', 'title' => 'Home']);
+Menu::add('itemName', '/', ['title' => 'Home']);
 
 
 // Menu::toArray() Output:
@@ -27,7 +27,8 @@ Menu::add('itemName', ['link' => '/', 'title' => 'Home']);
     [
         'name' => 'itemName',
         'title' => 'Home,
-        'link' => '/,
+        'route' => '/',
+        'active' => true, //depending on current request
     ]
 ]
 ```
@@ -38,9 +39,9 @@ The itemName should be unique within the menu since this is the identifier of th
 To create nested items you could use the following:
 
 ```php
-Menu::add('dashboard', ['title' => 'Dashboard'])->addChildren(function () {
-    Menu::add('index', ['link' => '/', 'title' => 'Home']);
-    Menu::add('profile', ['link' => '/profile', 'title' => 'Profile']);
+Menu::add('dashboard', '/', ['title' => 'Dashboard'])->addChildren(function () {
+    Menu::add('stats', '/stats', ['title' => 'Home']);
+    Menu::add('profile', '/profile', ['title' => 'Profile']);
 });
 
 // Menu::toArray() Output:
@@ -48,16 +49,20 @@ Menu::add('dashboard', ['title' => 'Dashboard'])->addChildren(function () {
     [
         'name' => 'dashboard',
         'title' => 'Dashboard',
+        'route' => '/',
+        'active' => true,
         'children' => [
             [
                 'name' => 'dashboard.index',
                 'title' => 'Home,
-                'link' => '/',
+                'route' => '/stats',
+                'active' => false,
             ],
             [
                 'name' => 'dashboard.profile',
                 'title' => 'Profile,
-                'link' => '/profile',
+                'route' => '/profile',
+                'active' => false,
             ]
         ]
     ]
@@ -67,12 +72,15 @@ Menu::add('dashboard', ['title' => 'Dashboard'])->addChildren(function () {
 You can pass any attributes to the MenuItem.
 
 ```php
-Menu::add('itemName', ['someAttribute' => 231, 'another' => 'value2']);
+Menu::add('itemName', '/', ['someAttribute' => 231, 'another' => 'value2']);
 
 
 // Menu::toArray() Output:
 [
     [
+        'name' => 'itemName',
+        'route' => '/',
+        'active' => true,
         'someAttribute' => 231,
         'another' => 'value2,
     ]
@@ -84,13 +92,13 @@ Menu::add('itemName', ['someAttribute' => 231, 'another' => 'value2']);
 If you would like to add menu items conditionwise, for example only add a menu item if a user is logged in, you can do it like this:
 
 ```php
-Menu::addIf($conditionOrClosure, 'itemName', $attributes);
+Menu::addIf($conditionOrClosure, 'itemName', $route, $attributes);
 ```
 
 Or pass a Auth Guard:
 
 ```php
-Menu::addIfCan('MyAuthGuard', 'itemName', $attributes);
+Menu::addIfCan('MyAuthGuard', 'itemName', $route, $attributes);
 ```
 
 ### Usage with InertiaJS
@@ -117,7 +125,7 @@ Then for example in your inertia-vue layout template;
             v-for="(child, childIndex) in item.children"
         >
             <inertia-link
-               :href="child.link"
+               :href="child.route"
                :class="child.active ? 'v-list-item--active' : ''"
               >
                 child.title
@@ -126,7 +134,7 @@ Then for example in your inertia-vue layout template;
     
         <inertia-link
            v-else
-           :href="item.link"
+           :href="item.route"
            :class="item.active ? 'v-list-item--active' : ''"
           >
             item.title

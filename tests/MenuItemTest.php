@@ -2,6 +2,7 @@
 
 namespace RSpeekenbrink\LaravelMenu\Tests;
 
+use Illuminate\Support\Facades\Request;
 use Mockery as m;
 use RSpeekenbrink\LaravelMenu\Menu;
 use RSpeekenbrink\LaravelMenu\MenuItem;
@@ -78,7 +79,7 @@ class MenuItemTest extends TestCase
 
         $item = new MenuItem($name, $route, $menu, $attributes);
 
-        $expectedResult = array_merge($attributes, ['name' => $name, 'route' => $route]);
+        $expectedResult = array_merge($attributes, ['name' => $name, 'route' => $route, 'active' => false]);
 
         $this->assertEquals($expectedResult, $item->toArray());
     }
@@ -105,8 +106,9 @@ class MenuItemTest extends TestCase
         $expectedResult = array_merge($attributes, [
             'name' => $name,
             'route' => $route,
+            'active' => false,
             'children' => [
-                array_merge($childAttributes, ['name' => $childName, 'route' => $childRoute]),
+                array_merge($childAttributes, ['name' => $childName, 'route' => $childRoute, 'active' => false]),
             ],
         ]);
 
