@@ -3,44 +3,51 @@
 namespace RSpeekenbrink\LaravelMenu;
 
 use Closure;
-use JsonSerializable;
-use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\Eloquent\Concerns\GuardsAttributes;
-use RSpeekenbrink\LaravelMenu\Exceptions\MissingAssociatedMenuException;
+use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Support\Facades\Request;
+use JsonSerializable;
 
 class MenuItem implements Arrayable, Jsonable, JsonSerializable
 {
-    use HasAttributes, GuardsAttributes;
+    use HasAttributes, GuardsAttributes, IsAssociatedWithMenu;
+
+    /** @var bool */
+    protected $active;
 
     /** @var string */
     protected $name;
 
+    /** @var string */
+    protected $route;
+
     /** @var MenuItemCollection */
     protected $children;
 
-    /** @var Menu */
-    protected $menu;
-
     /** @var array */
     protected $guardedAttributes = [
+        'active',
         'children',
         'menu',
         'name',
+        'route',
     ];
 
     /**
      * MenuItem constructor.
      *
      * @param string $name
+     * @param string $route
+     * @param Menu $menu
      * @param array $attributes
      */
-    public function __construct($name, $attributes = [])
+    public function __construct(string $name, string $route, Menu $menu, $attributes = [])
     {
         $this->guard($this->guardedAttributes);
 
-        $this->initializeItem($name);
+        $this->initializeItem($name, $route, $menu);
 
         $this->fill($attributes);
     }
@@ -48,11 +55,16 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * Initialize the values of the MenuItem.
      *
-     * @param $name
+     * @param string $name
+     * @param string $route
+     * @param Menu $menu
      */
-    protected function initializeItem($name)
+    protected function initializeItem(string $name, string $route, Menu $menu)
     {
-        $this->name = $name;
+        $this->setMenu($menu);
+        $this->setName($name);
+        $this->setRoute($route);
+
         $this->children = new MenuItemCollection();
     }
 
@@ -82,6 +94,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     {
         $array = [
             'name' => $this->getName(),
+            'route' => $this->getRoute(),
         ];
 
         if (count($this->getChildren()) > 0) {
@@ -139,15 +152,9 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      *
      * @param Closure $items
      * @return $this
-     *
-     * @throws MissingAssociatedMenuException
      */
     public function addChildren(Closure $items)
     {
-        if (! $this->getMenu()) {
-            throw new MissingAssociatedMenuException('For MenuItem: '.$this->getName());
-        }
-
         $this->menu->loadChildren($this, $items);
 
         return $this;
@@ -187,26 +194,36 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
-     * Get the menu instance associated with the menuItem.
+     * Set the route of the menuItem.
      *
-     * @return Menu
+     * @param string $route
+     * @return $this
      */
-    public function getMenu()
+    public function setRoute(string $route)
     {
-        return $this->menu;
+        $this->route = $route;
+
+        $this->updateActive();
+
+        return $this;
     }
 
     /**
-     * Set the menu instance associated with the MenuItem.
+     * Returns the route of the menuItem.
      *
-     * @param Menu $menu
-     * @return $this
+     * @return string
      */
-    public function setMenu(Menu $menu)
+    public function getRoute()
     {
-        $this->menu = $menu;
+        return $this->route;
+    }
 
-        return $this;
+    /**
+     * Updates the active state of the menuItem.
+     */
+    protected function updateActive()
+    {
+        $this->active = Request::is($this->getRoute());
     }
 
     /**

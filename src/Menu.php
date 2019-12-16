@@ -3,10 +3,10 @@
 namespace RSpeekenbrink\LaravelMenu;
 
 use Closure;
-use JsonSerializable;
 use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
+use JsonSerializable;
 use RSpeekenbrink\LaravelMenu\Exceptions\NameExistsException;
 
 class Menu implements Arrayable, Jsonable, JsonSerializable
@@ -29,22 +29,23 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
      * Add a new MenuItem to the menu.
      *
      * @param string $name
+     * @param string $route
      * @param array $attributes
-     * @return Contracts\MenuItem
+     * @return MenuItem
      *
      * @throws NameExistsException
      */
-    public function add(string $name, array $attributes = [])
+    public function add(string $name, string $route, array $attributes = [])
     {
-        if ($this->menuItems->hasName($name)) {
-            throw new NameExistsException($name);
-        }
-
         if ($this->hasParent()) {
             $name = end($this->parentStack)->getName().'.'.$name;
         }
 
-        $item = $this->createItem($name, $attributes);
+        if ($this->menuItems->hasName($name)) {
+            throw new NameExistsException($name);
+        }
+
+        $item = $this->createItem($name, $route, $attributes);
 
         $this->pushItem($item);
 
@@ -81,14 +82,15 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
      *
      * @param mixed $condition
      * @param string $name
+     * @param string $route
      * @param array $attributes
-     * @return bool|Contracts\MenuItem
+     * @return MenuItem
      *
      * @throws NameExistsException
      */
-    public function addIf($condition, string $name, array $attributes = [])
+    public function addIf($condition, string $name, string $route, array $attributes = [])
     {
-        return $this->resolveCondition($condition) ? $this->add($name, $attributes) : null;
+        return $this->resolveCondition($condition) ? $this->add($name, $route, $attributes) : null;
     }
 
     /**
@@ -96,28 +98,40 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
      *
      * @param string|array $authorization
      * @param string $name
+     * @param string $route
      * @param array $attributes
-     * @return null|Contracts\MenuItem
+     * @return MenuItem
      *
      * @throws NameExistsException
      */
-    public function addIfCan($authorization, string $name, array $attributes = [])
+    public function addIfCan($authorization, string $name, string $route, array $attributes = [])
     {
         $arguments = is_array($authorization) ? $authorization : [$authorization];
         $ability = array_shift($arguments);
 
-        return $this->addIf(app(Gate::class)->allows($ability, $arguments), $name, $attributes);
+        return $this->addIf(app(Gate::class)->allows($ability, $arguments), $name, $route, $attributes);
     }
 
     /**
      * Find and return a MenuItem by name.
      *
      * @param $name
-     * @return null|Contracts\MenuItem
+     * @return MenuItem
      */
     public function getItemByName($name)
     {
         return $this->menuItems->getItemByName($name);
+    }
+
+    /**
+     * Get an index of an item by name.
+     *
+     * @param string $name
+     * @return int
+     */
+    public function getIndexByName($name)
+    {
+        return $this->menuItems->getIndexByName($name);
     }
 
     /**
@@ -135,12 +149,13 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
      * Create new MenuItem instance.
      *
      * @param string $name
+     * @param string $route
      * @param array $attributes
-     * @return Contracts\MenuItem
+     * @return MenuItem
      */
-    protected function createItem(string $name, array $attributes = [])
+    protected function createItem(string $name, string $route, array $attributes = [])
     {
-        $item = $this->newItem($name, $attributes)->setMenu($this);
+        $item = $this->newItem($name, $route, $attributes);
 
         return $item;
     }
@@ -149,12 +164,13 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
      * Create new MenuItem object.
      *
      * @param string $name
+     * @param string $route
      * @param array $attributes
      * @return MenuItem
      */
-    protected function newItem(string $name, array $attributes = [])
+    protected function newItem(string $name, string $route, array $attributes = [])
     {
-        return new MenuItem($name, $attributes);
+        return new MenuItem($name, $route, $this, $attributes);
     }
 
     /**
@@ -188,19 +204,6 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
         $items();
 
         array_pop($this->parentStack);
-    }
-
-    /**
-     * Get an index of an item by name.
-     *
-     * @param string $name
-     * @return int
-     */
-    public function getIndexByName($name)
-    {
-        return $this->menuItems->search(function (MenuItem $item) use ($name) {
-            return $item->getName() == $name;
-        });
     }
 
     /**
