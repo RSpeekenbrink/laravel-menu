@@ -2,7 +2,6 @@
 
 namespace RSpeekenbrink\LaravelMenu\Tests;
 
-use Illuminate\Support\Facades\Request;
 use Mockery as m;
 use RSpeekenbrink\LaravelMenu\Menu;
 use RSpeekenbrink\LaravelMenu\MenuItem;
