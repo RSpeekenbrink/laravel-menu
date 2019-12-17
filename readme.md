@@ -19,78 +19,83 @@ composer require rspeekenbrink/laravel-menu
 A default menu will already be registered and bound to the `Menu` facade. You can add items to the menu like this:
 
 ```php
-Menu::add('itemName', ['link' => '/', 'title' => 'Home']);
+Menu::add('itemName', '/');
 
 
 // Menu::toArray() Output:
 [
     [
         'name' => 'itemName',
-        'title' => 'Home,
-        'link' => '/,
+        'route' => '/',
+        'active' => true, //depending on current request
     ]
 ]
 ```
 
-The itemName should be unique within the menu since this is the identifier of the item in the Menu.
+**The itemName should be unique within the menu since this is the identifier of the item in the Menu.**
 
 
 To create nested items you could use the following:
 
 ```php
-Menu::add('dashboard', ['title' => 'Dashboard'])->addChildren(function () {
-    Menu::add('index', ['link' => '/', 'title' => 'Home']);
-    Menu::add('profile', ['link' => '/profile', 'title' => 'Profile']);
+Menu::add('dashboard', '/')->addChildren(function () {
+    Menu::add('stats', '/stats');
+    Menu::add('profile', '/profile');
 });
 
 // Menu::toArray() Output:
 [
     [
         'name' => 'dashboard',
-        'title' => 'Dashboard',
+        'route' => '/',
+        'active' => true,
         'children' => [
             [
-                'name' => 'dashboard.index',
-                'title' => 'Home,
-                'link' => '/',
+                'name' => 'dashboard.stats',
+                'route' => '/stats',
+                'active' => false,
             ],
             [
                 'name' => 'dashboard.profile',
-                'title' => 'Profile,
-                'link' => '/profile',
+                'route' => '/profile',
+                'active' => false,
             ]
         ]
     ]
 ]
 ```
 
-You can pass any attributes to the MenuItem.
+You can pass attributes to the MenuItem to define values like Title or anything else you desire;
 
 ```php
-Menu::add('itemName', ['someAttribute' => 231, 'another' => 'value2']);
+Menu::add('itemName', '/', ['title' => 'Dashboard', 'someAttribute' => 231, 'another' => 'value2']);
 
 
 // Menu::toArray() Output:
 [
     [
+        'name' => 'itemName',
+        'route' => '/',
+        'active' => true,
+        'title' => 'Dashboard',
         'someAttribute' => 231,
         'another' => 'value2,
     ]
 ]
 ```
 
-### Adding items condition wise
+### Adding items condition wise or via Auth Guards
 
 If you would like to add menu items conditionwise, for example only add a menu item if a user is logged in, you can do it like this:
 
 ```php
-Menu::addIf($conditionOrClosure, 'itemName', $attributes);
+Menu::addIf($conditionOrClosure, 'itemName', $route, $attributes);
 ```
 
 Or pass a Auth Guard:
 
 ```php
-Menu::addIfCan('MyAuthGuard', 'itemName', $attributes);
+Menu::addIfCan('MyAuthGuard', 'itemName', $route, $attributes);
 ```
 
 ### Usage with InertiaJS
@@ -110,28 +115,22 @@ Then for example in your inertia-vue layout template;
 
 ```vue
 <template>
-    <template
-        v-for="(item, i) in $page.menu"
-    >
-        <template v-if="item.children"
-            v-for="(child, childIndex) in item.children"
-        >
-            <inertia-link
-               :href="child.link"
-               :class="child.active ? 'v-list-item--active' : ''"
-              >
-                child.title
-             </inertia-link>
+    <nav>
+        <template v-for="(item, i) in $page.menu">
+             <template>
+                 <li :class="item.active ? 'active' : ''"
+                     @click="$inertia.visit(item.route, { preserveState: true })">
+                     <span>{{ item.title }}</span>
+                 </li>
+             </template>
+             <template v-if="item.children" v-for="(child, i) in item.children">
+                 <li :class="child.active ? 'active' : ''"
+                      @click="$inertia.visit(child.route, { preserveState: true })">
+                      <span>{{ child.title }}</span>
+                  </li>
+             </template>
         </template>
-    
-        <inertia-link
-           v-else
-           :href="item.link"
-           :class="item.active ? 'v-list-item--active' : ''"
-          >
-            item.title
-         </inertia-link>
-    </template>
+    </nav>
 </template>
 ```
 
@@ -148,11 +147,6 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ### Security
 
 If you discover any security related issues, please email contact@rspeekenbrink.nl instead of using the issue tracker.
-
-## Credits
-
-- [RSpeekenbrink](https://github.com/rspeekenbrink)
-- [All Contributors](../../contributors)
 
 ## License
 

@@ -42,4 +42,17 @@ class MenuItemCollection extends Collection
             }
         }
     }
+
+    /**
+     * Get an index of an item by name.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getIndexByName(string $name)
+    {
+        return $this->search(function (MenuItem $item) use ($name) {
+            return $item->getName() == $name;
+        });
+    }
 }

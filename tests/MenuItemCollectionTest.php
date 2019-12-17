@@ -13,9 +13,9 @@ class MenuItemCollectionTest extends TestCase
 
     public function setUp(): void
     {
-        $this->collection = new MenuItemCollection();
-
         parent::setUp();
+
+        $this->collection = new MenuItemCollection();
     }
 
     public function testCollectionCanBeInstantiated()
