@@ -113,28 +113,6 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
-     * Find and return a MenuItem by name.
-     *
-     * @param $name
-     * @return MenuItem
-     */
-    public function getItemByName($name)
-    {
-        return $this->menuItems->getItemByName($name);
-    }
-
-    /**
-     * Get an index of an item by name.
-     *
-     * @param string $name
-     * @return int
-     */
-    public function getIndexByName($name)
-    {
-        return $this->menuItems->getIndexByName($name);
-    }
-
-    /**
      * Resolve the condition.
      *
      * @param $condition
@@ -171,6 +149,28 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     protected function newItem(string $name, string $route, array $attributes = [])
     {
         return new MenuItem($name, $route, $this, $attributes);
+    }
+
+    /**
+     * Find and return a MenuItem by name.
+     *
+     * @param $name
+     * @return MenuItem
+     */
+    public function getItemByName($name)
+    {
+        return $this->menuItems->getItemByName($name);
+    }
+
+    /**
+     * Get an index of an item by name.
+     *
+     * @param string $name
+     * @return int
+     */
+    public function getIndexByName($name)
+    {
+        return $this->menuItems->getIndexByName($name);
     }
 
     /**
