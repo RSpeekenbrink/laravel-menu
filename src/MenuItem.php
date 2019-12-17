@@ -8,14 +8,12 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\Eloquent\Concerns\GuardsAttributes;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 use JsonSerializable;
 
 class MenuItem implements Arrayable, Jsonable, JsonSerializable
 {
     use HasAttributes, GuardsAttributes, IsAssociatedWithMenu;
-
-    /** @var bool */
-    protected $active;
 
     /** @var string */
     protected $name;
@@ -204,8 +202,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     {
         $this->route = $route;
 
-        $this->updateActive();
-
         return $this;
     }
 
@@ -217,14 +213,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     public function getRoute()
     {
         return $this->route;
-    }
-
-    /**
-     * Updates the active state of the menuItem.
-     */
-    protected function updateActive()
-    {
-        $this->active = Request::is($this->getRoute());
     }
 
     /**
@@ -265,6 +253,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     public function isActive()
     {
-        return $this->active;
+        return Request::is($this->getRoute()) || (Route::currentRouteName() == $this->getRoute());
     }
 }
