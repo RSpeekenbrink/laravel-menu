@@ -27,13 +27,20 @@ Menu::add('itemName', '/');
     [
         'name' => 'itemName',
         'route' => '/',
-        'active' => true, //depending on current request
+        'active' => true,
     ]
 ]
 ```
 
 **The itemName should be unique within the menu since this is the identifier of the item in the Menu.**
 
+### Route attribute and Active state
+
+The route can be an absolute route like ```'/dashboard/profile'``` or a name of a route like ```'dashboard.index'``` for the automatic active state checking to work properly. If you want to use route names we recommend you to use [Ziggy](https://github.com/tightenco/ziggy) to convert the names to URLs in your front-end.
+
+The active attribute is a boolean that will be true if the route matches the route of the current request (path or name wise). 
+
+### Nested Routes
 
 To create nested items you could use the following:
 
@@ -64,6 +71,8 @@ Menu::add('dashboard', '/')->addChildren(function () {
     ]
 ]
 ```
+
+### Attributes
 
 You can pass attributes to the MenuItem to define values like Title or anything else you desire;
 
@@ -134,7 +143,7 @@ Then for example in your inertia-vue layout template;
 </template>
 ```
 
-### Testing
+## Testing
 
 ``` bash
 composer test
@@ -144,7 +153,7 @@ composer test
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-### Security
+## Security
 
 If you discover any security related issues, please email contact@rspeekenbrink.nl instead of using the issue tracker.
 
