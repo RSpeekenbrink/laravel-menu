@@ -5,7 +5,6 @@ namespace RSpeekenbrink\LaravelMenu;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Database\Eloquent\Concerns\GuardsAttributes;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -252,7 +251,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     public function isFillable($key)
     {
-        return !in_array($key, $this->guardedAttributes);
+        return ! in_array($key, $this->guardedAttributes);
     }
 
     /**
