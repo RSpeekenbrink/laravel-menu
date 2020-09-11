@@ -11,16 +11,16 @@
     ],
     "require": {
         "php": "^7.2",
-        "illuminate/contracts": "^6|^7",
-        "illuminate/database": "^6|^7",
-        "illuminate/support": "^6|^7",
+        "illuminate/contracts": "^6|^7|^8",
+        "illuminate/database": "^6|^7|^8",
+        "illuminate/support": "^6|^7|^8",
         "ext-json": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.6",
-        "illuminate/auth": "^6|^7",
+        "illuminate/auth": "^6|^7|^8",
         "orchestra/testbench": "^4.8|^5",
-        "phpunit/phpunit": "^7|^8"
+        "phpunit/phpunit": "^7|^8|^9"
     },
     "autoload": {
         "psr-4": {

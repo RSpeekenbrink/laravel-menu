@@ -13,7 +13,7 @@ use JsonSerializable;
 
 class MenuItem implements Arrayable, Jsonable, JsonSerializable
 {
-    use HasAttributes, GuardsAttributes, IsAssociatedWithMenu;
+    use HasAttributes, IsAssociatedWithMenu;
 
     /** @var string */
     protected $name;
@@ -43,8 +43,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     public function __construct(string $name, string $route, Menu $menu, $attributes = [])
     {
-        $this->guard($this->guardedAttributes);
-
         $this->initializeItem($name, $route, $menu);
 
         $this->fill($attributes);
@@ -74,7 +72,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     public function fill(array $attributes)
     {
-        foreach ($this->fillableFromArray($attributes) as $key => $value) {
+        foreach ($attributes as $key => $value) {
             if ($this->isFillable($key)) {
                 $this->setAttribute($key, $value);
             }
@@ -244,6 +242,17 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     public function jsonSerialize()
     {
         return $this->toArray();
+    }
+
+    /**
+     * Determine if the given attribute may be mass assigned.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function isFillable($key)
+    {
+        return !in_array($key, $this->guardedAttributes);
     }
 
     /**
