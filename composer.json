@@ -17,7 +17,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "fzaninotto/faker": "~1.6",
+        "fzaninotto/faker": "~1.9",
         "illuminate/auth": "^6|^7|^8",
         "orchestra/testbench": "^4.8|^5",
         "phpunit/phpunit": "^7|^8|^9"
