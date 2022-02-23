@@ -20,7 +20,7 @@ trait IsAssociatedWithMenu
     /**
      * Set the menu instance associated with the class.
      *
-     * @param Menu $menu
+     * @param  Menu  $menu
      * @return $this
      */
     protected function setMenu(Menu $menu)

@@ -35,10 +35,10 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * MenuItem constructor.
      *
-     * @param string $name
-     * @param string $route
-     * @param Menu $menu
-     * @param array $attributes
+     * @param  string  $name
+     * @param  string  $route
+     * @param  Menu  $menu
+     * @param  array  $attributes
      */
     public function __construct(string $name, string $route, Menu $menu, $attributes = [])
     {
@@ -50,9 +50,9 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * Initialize the values of the MenuItem.
      *
-     * @param string $name
-     * @param string $route
-     * @param Menu $menu
+     * @param  string  $name
+     * @param  string  $route
+     * @param  Menu  $menu
      */
     protected function initializeItem(string $name, string $route, Menu $menu)
     {
@@ -66,7 +66,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * Fill the menuItem with the given attributes.
      *
-     * @param array $attributes
+     * @param  array  $attributes
      * @return $this
      */
     public function fill(array $attributes)
@@ -133,7 +133,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * Add children to the MenuItem.
      *
-     * @param self $item
+     * @param  self  $item
      * @return $this
      */
     public function addChild(self $item)
@@ -146,7 +146,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * Add multiple children to the MenuItem.
      *
-     * @param Closure $items
+     * @param  Closure  $items
      * @return $this
      */
     public function addChildren(Closure $items)
@@ -192,7 +192,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * Set the route of the menuItem.
      *
-     * @param string $route
+     * @param  string  $route
      * @return $this
      */
     public function setRoute(string $route)
@@ -236,7 +236,6 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
             $attributes = $this->getArrayableAttributes()
         );
 
-
         // Here we will grab all of the appended, calculated attributes to this model
         // as these attributes are not really in the attributes array, but are run
         // when we need to array or JSON the model for convenience to the coder.
@@ -250,7 +249,7 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     /**
      * Convert the object to its JSON representation.
      *
-     * @param int $options
+     * @param  int  $options
      * @return string
      */
     public function toJson($options = 0)
