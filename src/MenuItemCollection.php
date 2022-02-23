@@ -9,7 +9,7 @@ class MenuItemCollection extends Collection
     /**
      * Returns if the collection has a MenuItem with the given name.
      *
-     * @param string $name
+     * @param  string  $name
      * @return bool
      */
     public function hasName(string $name)
@@ -22,7 +22,7 @@ class MenuItemCollection extends Collection
     /**
      * Get a MenuItem from the collection by name.
      *
-     * @param string $name
+     * @param  string  $name
      * @return MenuItem
      */
     public function getItemByName(string $name)
@@ -46,7 +46,7 @@ class MenuItemCollection extends Collection
     /**
      * Get an index of an item by name.
      *
-     * @param string $name
+     * @param  string  $name
      * @return mixed
      */
     public function getIndexByName(string $name)

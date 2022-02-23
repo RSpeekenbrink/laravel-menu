@@ -28,9 +28,9 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Add a new MenuItem to the menu.
      *
-     * @param string $name
-     * @param string $route
-     * @param array $attributes
+     * @param  string  $name
+     * @param  string  $route
+     * @param  array  $attributes
      * @return MenuItem
      *
      * @throws NameExistsException
@@ -55,7 +55,7 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Push the given item to the correct stacks.
      *
-     * @param MenuItem $item
+     * @param  MenuItem  $item
      * @return MenuItemCollection
      */
     protected function pushItem(MenuItem $item)
@@ -80,10 +80,10 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Add a new menuItem to the menu if the condition is true.
      *
-     * @param mixed $condition
-     * @param string $name
-     * @param string $route
-     * @param array $attributes
+     * @param  mixed  $condition
+     * @param  string  $name
+     * @param  string  $route
+     * @param  array  $attributes
      * @return MenuItem
      *
      * @throws NameExistsException
@@ -96,10 +96,10 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Add a new menuItem to the menu when authorized.
      *
-     * @param string|array $authorization
-     * @param string $name
-     * @param string $route
-     * @param array $attributes
+     * @param  string|array  $authorization
+     * @param  string  $name
+     * @param  string  $route
+     * @param  array  $attributes
      * @return MenuItem
      *
      * @throws NameExistsException
@@ -126,9 +126,9 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Create new MenuItem instance.
      *
-     * @param string $name
-     * @param string $route
-     * @param array $attributes
+     * @param  string  $name
+     * @param  string  $route
+     * @param  array  $attributes
      * @return MenuItem
      */
     protected function createItem(string $name, string $route, array $attributes = [])
@@ -141,9 +141,9 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Create new MenuItem object.
      *
-     * @param string $name
-     * @param string $route
-     * @param array $attributes
+     * @param  string  $name
+     * @param  string  $route
+     * @param  array  $attributes
      * @return MenuItem
      */
     protected function newItem(string $name, string $route, array $attributes = [])
@@ -165,7 +165,7 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Get an index of an item by name.
      *
-     * @param string $name
+     * @param  string  $name
      * @return int
      */
     public function getIndexByName($name)
@@ -194,8 +194,8 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
-     * @param MenuItem $parent
-     * @param Closure $items
+     * @param  MenuItem  $parent
+     * @param  Closure  $items
      */
     public function loadChildren(MenuItem $parent, Closure $items)
     {
@@ -209,7 +209,7 @@ class Menu implements Arrayable, Jsonable, JsonSerializable
     /**
      * Convert the object to its JSON representation.
      *
-     * @param int $options
+     * @param  int  $options
      * @return string
      */
     public function toJson($options = 0)
