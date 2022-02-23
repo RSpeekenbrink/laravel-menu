@@ -1,5 +1,5 @@
 {
-    "name": "rspeekenbrink/laravel-menu",
+    "name": "danieleisenhardt/laravel-menu",
     "description": "Simple menu generation in Laravel",
     "type": "library",
     "license": "MIT",
