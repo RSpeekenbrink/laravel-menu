@@ -223,6 +223,31 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
     }
 
     /**
+     * Convert the model's attributes to an array.
+     *
+     * @return array
+     */
+    public function attributesToArray()
+    {
+        // If an attribute is a date, we will cast it to a string after converting it
+        // to a DateTime / Carbon instance. This is so we will get some consistent
+        // formatting while accessing attributes vs. arraying / JSONing a model.
+        $attributes = $this->addDateAttributesToArray(
+            $attributes = $this->getArrayableAttributes()
+        );
+
+
+        // Here we will grab all of the appended, calculated attributes to this model
+        // as these attributes are not really in the attributes array, but are run
+        // when we need to array or JSON the model for convenience to the coder.
+        foreach ($this->getArrayableAppends() as $key) {
+            $attributes[$key] = $this->mutateAttributeForArray($key, null);
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Convert the object to its JSON representation.
      *
      * @param int $options
