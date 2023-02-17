@@ -163,7 +163,10 @@ class MenuItem implements Arrayable, Jsonable, JsonSerializable
      */
     public function getDates()
     {
-        return $this->dates;
+        return [
+            'created_at',
+            'updated_at',
+        ];
     }
 
     /**
