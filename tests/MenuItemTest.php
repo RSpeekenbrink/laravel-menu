@@ -66,8 +66,7 @@ class MenuItemTest extends TestCase
 
         $item->addChildren($closure);
 
-        // Work around assertion warning. True test is in shouldReceive.
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testItemCanBeConvertedToArray()
