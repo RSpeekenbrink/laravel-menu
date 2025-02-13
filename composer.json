@@ -44,5 +44,6 @@
                 "Menu": "RSpeekenbrink\\LaravelMenu\\Facades\\Menu"
             }
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
