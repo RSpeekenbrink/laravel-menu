@@ -11,9 +11,9 @@
     ],
     "require": {
         "php": "^7.2|^8.0",
-        "illuminate/contracts": "^6|^7|^8|^9|^10|^11",
-        "illuminate/database": "^6|^7|^8|^9|^10|^11",
-        "illuminate/support": "^6|^7|^8|^9|^10|^11",
+        "illuminate/contracts": "^6|^7|^8|^9|^10|^11|^12",
+        "illuminate/database": "^6|^7|^8|^9|^10|^11|^12",
+        "illuminate/support": "^6|^7|^8|^9|^10|^11|^12",
         "ext-json": "*"
     },
     "require-dev": {
